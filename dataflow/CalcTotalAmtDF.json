@@ -1,0 +1,65 @@
+{
+	"name": "CalcTotalAmtDF",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SalesCSV",
+						"type": "DatasetReference"
+					},
+					"name": "CalcTotalAmtDF"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "SalesOrders",
+						"type": "DatasetReference"
+					},
+					"name": "CalcTotalAmtSink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "AddTotalAmt"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          OrderID as string,",
+				"          OrderDate as string,",
+				"          Item as string,",
+				"          Category as string,",
+				"          Quantity as string,",
+				"          Price as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> CalcTotalAmtDF",
+				"CalcTotalAmtDF derive(TotalAmount = toInteger(Quantity) * toFloat(Price)) ~> AddTotalAmt",
+				"AddTotalAmt sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          OrderID as integer,",
+				"          OrderDate as date,",
+				"          Item as string,",
+				"          Category as string,",
+				"          Quantity as integer,",
+				"          Price as double,",
+				"          TotalAmount as double",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> CalcTotalAmtSink"
+			]
+		}
+	}
+}

@@ -1,0 +1,9 @@
+{
+	"name": "adf-restaurant-etl",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "c29143b0-7092-4755-9bd0-68e1ae4f96fa",
+		"tenantId": "fd910762-7e79-421d-b72c-41b526386933"
+	}
+}
